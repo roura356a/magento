@@ -2,7 +2,7 @@ FROM roura/php-magento:7.0
 
 ENV MAGENTO_ROOT "/var/www/html"
 
-COPY ./../auth.json /root/composer/
+COPY ./auth.json /root/composer/
 
 # Create Magento
 RUN rm -rf $MAGENTO_ROOT
@@ -11,7 +11,7 @@ RUN composer require mageplaza/magento-2-blog-extension:2.4.6
 RUN composer require mageplaza/magento-2-banner-slider-extension
 
 # Setup Magento Cron Jobs
-COPY ./../cron.sh $MAGENTO_ROOT/
+COPY ./cron.sh $MAGENTO_ROOT/
 RUN touch /var/spool/cron/crontabs/root \
     && crontab -l > newcron \
     && echo "* * * * * $MAGENTO_ROOT/cron.sh" >> newcron \

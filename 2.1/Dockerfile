@@ -17,5 +17,12 @@ RUN touch /var/spool/cron/crontabs/root \
     && echo "* * * * * $MAGENTO_ROOT/cron.sh" >> newcron \
     && crontab newcron && rm newcron
 
+COPY ./scripts/* /var/www/html/
+COPY ./etc/* /var/www/html/app/etc/
+
+# Setup Frontend stuff
+RUN mv package.json.sample package.json && npm install \
+    && mv Gruntfile.js.sample Gruntfile.js && grunt
+
 # Set Web Server Permissions
 RUN cd $MAGENTO_ROOT && chown -R www-data:www-data ./

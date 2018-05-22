@@ -13,7 +13,7 @@ RUN composer require mageplaza/magento-2-banner-slider-extension
 # Setup Magento Cron Jobs
 RUN touch /var/spool/cron/crontabs/root \
     && crontab -l > newcron \
-    && echo "* * * * * $MAGENTO_ROOT/cron.sh" >> newcron \
+    && echo "* * * * * /var/www/html/cron.sh" >> newcron \
     && crontab newcron && rm newcron
 
 # Setup Frontend stuff

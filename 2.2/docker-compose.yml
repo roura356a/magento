@@ -1,0 +1,25 @@
+version: '3.6'
+
+services:
+  mysql:
+    image: mysql:5
+    container_name: magentodb
+    restart: on-failure
+    network_mode: bridge
+    environment:
+      MYSQL_ROOT_PASSWORD: magento1234
+      MYSQL_DATABASE: magento
+    volumes:
+      - ./mysql:/var/lib/mysql
+  web:
+    build:
+      context: .
+    container_name: magento
+    restart: on-failure
+    network_mode: bridge
+    environment:
+      VIRTUAL_HOST: magento.docker
+    depends_on:
+      - mysql
+    links:
+      - mysql

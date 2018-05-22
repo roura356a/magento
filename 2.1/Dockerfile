@@ -26,3 +26,4 @@ RUN mv package.json.sample package.json && npm install \
 
 # Set Web Server Permissions
 RUN cd $MAGENTO_ROOT && chown -R www-data:www-data ./
+RUN chmod +x bin/magento

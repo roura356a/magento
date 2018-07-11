@@ -11,11 +11,19 @@ RUN composer require mageplaza/magento-2-blog-extension:2.4.6
 RUN composer require mageplaza/magento-2-banner-slider-extension
 
 # Setup Magento Cron Jobs
-COPY ./cron.sh $MAGENTO_ROOT/
 RUN touch /var/spool/cron/crontabs/root \
     && crontab -l > newcron \
-    && echo "* * * * * $MAGENTO_ROOT/cron.sh" >> newcron \
+    && echo "* * * * * /var/www/html/cron.sh" >> newcron \
     && crontab newcron && rm newcron
+
+# Setup Frontend stuff
+RUN mv package.json.sample package.json && npm install \
+    && mv Gruntfile.js.sample Gruntfile.js && grunt
+
+# Base Scripts
+COPY ./scripts/* $MAGENTO_ROOT/
+COPY ./etc/* $MAGENTO_ROOT/app/etc/
 
 # Set Web Server Permissions
 RUN cd $MAGENTO_ROOT && chown -R www-data:www-data ./
+RUN chmod +x bin/magento cron.sh refresh.sh reindex.sh

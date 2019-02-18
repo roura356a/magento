@@ -1,0 +1,2 @@
+tilecity: apache2-foreground
+cron: cron -f

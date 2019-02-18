@@ -1,4 +1,4 @@
-FROM roura/php-magento:7.0
+FROM roura/php-magento
 
 ENV MAGENTO_ROOT "/var/www/html"
 
@@ -11,10 +11,9 @@ RUN composer require mageplaza/magento-2-blog-extension:2.4.6
 RUN composer require mageplaza/magento-2-banner-slider-extension
 
 # Setup Magento Cron Jobs
-RUN touch /var/spool/cron/crontabs/root \
-    && crontab -l > newcron \
-    && echo "* * * * * /var/www/html/cron.sh" >> newcron \
-    && crontab newcron && rm newcron
+RUN wget https://github.com/chrismytton/shoreman/raw/master/shoreman.sh -O /usr/local/bin/shoreman \
+    && touch /var/spool/cron/crontabs/root && crontab -l > newcron \
+    && echo "* * * * * /var/www/html/cron.sh" >> newcron && crontab newcron && rm newcron
 
 # Setup Frontend stuff
 RUN mv package.json.sample package.json && npm install \
@@ -22,8 +21,8 @@ RUN mv package.json.sample package.json && npm install \
 
 # Base Scripts
 COPY ./scripts/* $MAGENTO_ROOT/
-COPY ./etc/* $MAGENTO_ROOT/app/etc/
 
 # Set Web Server Permissions
-RUN cd $MAGENTO_ROOT && chown -R www-data:www-data ./
-RUN chmod +x bin/magento cron.sh refresh.sh reindex.sh
+RUN chown -R www-data:www-data ./ && chmod +x /usr/local/bin/shoreman bin/magento cron.sh refresh.sh reindex.sh
+
+CMD ["shoreman"]

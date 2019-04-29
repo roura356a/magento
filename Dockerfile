@@ -6,9 +6,8 @@ COPY ./auth.json /root/composer/
 
 # Create Magento
 RUN rm -rf $MAGENTO_ROOT
-RUN composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="2.2.*" $MAGENTO_ROOT
-RUN composer require mageplaza/magento-2-blog-extension:3.0.4
-RUN composer require mageplaza/magento-2-banner-slider-extension
+RUN composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="2.2.*" $MAGENTO_ROOT \
+    composer require mageplaza/magento-2-blog-extension mageplaza/magento-2-banner-slider-extension
 
 # Setup Magento Cron Jobs
 RUN wget https://github.com/chrismytton/shoreman/raw/master/shoreman.sh -O /usr/local/bin/shoreman \
